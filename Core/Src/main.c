@@ -141,6 +141,8 @@ TRANSMIT_DATA transmit_data ={.delimiter = NAN};
 
 extern LSM6DSL_VALUES lsm6dsl_values;
 extern LIS3MDL_VALUES lis3mdl_values;
+extern LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values;
+extern LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

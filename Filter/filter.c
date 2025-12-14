@@ -1,6 +1,10 @@
 #include "filter.h"
 #include <string.h>
 
+/* GLOBALE FILTERWERTE, nur Deklaration */
+LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values;
+LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values;
+
 /* ============================================================
  * 5th Order Butterworth (SOS) Filter – coefficients from MATLAB
  * fs = 100 Hz, fc = 10 Hz
@@ -65,19 +69,17 @@ float Filter_Process(float x)
  * ============================================================ */
 LSM6DSL_FILTERED_VALUES LSM6DSL_Filter_Update(LSM6DSL_VALUES current)
 {
-    LSM6DSL_FILTERED_VALUES filtered;
+    lsm6dsl_filtered_values.acc_x = Filter_Process(current.acc_x);
+    lsm6dsl_filtered_values.acc_y = Filter_Process(current.acc_y);
+    lsm6dsl_filtered_values.acc_z = Filter_Process(current.acc_z);
 
-    filtered.acc_x = Filter_Process(current.acc_x);
-    filtered.acc_y = Filter_Process(current.acc_y);
-    filtered.acc_z = Filter_Process(current.acc_z);
+    lsm6dsl_filtered_values.gyro_x = Filter_Process(current.gyro_x);
+    lsm6dsl_filtered_values.gyro_y = Filter_Process(current.gyro_y);
+    lsm6dsl_filtered_values.gyro_z = Filter_Process(current.gyro_z);
 
-    filtered.gyro_x = Filter_Process(current.gyro_x);
-    filtered.gyro_y = Filter_Process(current.gyro_y);
-    filtered.gyro_z = Filter_Process(current.gyro_z);
+    lsm6dsl_filtered_values.temperature = Filter_Process(current.temperature);
 
-    filtered.temperature = Filter_Process(current.temperature);
-
-    return filtered;
+    return lsm6dsl_filtered_values;
 }
 
 /* ============================================================
@@ -91,11 +93,9 @@ void LIS3MDL_Filter_Init(void)
 
 LIS3MDL_FILTERED_VALUES LIS3MDL_Filter_Update(LIS3MDL_VALUES current)
 {
-    LIS3MDL_FILTERED_VALUES filtered;
+    lis3mdl_filtered_values.x = Filter_Process(current.x);
+    lis3mdl_filtered_values.y = Filter_Process(current.y);
+    lis3mdl_filtered_values.z = Filter_Process(current.z);
 
-    filtered.x = Filter_Process(current.x);
-    filtered.y = Filter_Process(current.y);
-    filtered.z = Filter_Process(current.z);
-
-    return filtered;
+    return lis3mdl_filtered_values;
 }
