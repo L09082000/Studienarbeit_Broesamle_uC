@@ -769,13 +769,15 @@ void Data_Transmit_Task(void *argument)
 /* USER CODE END Header_Data_Filter_Task */
 void Data_Filter_Task(void *argument)
 {
-  /* USER CODE BEGIN Data_Filter_Task */
-  /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  // Filter auf die aktuellen Rohwerte anwenden
+	  lsm6dsl_filtered_values = LSM6DSL_Filter_Update(lsm6dsl_values);
+	  lis3mdl_filtered_values = LIS3MDL_Filter_Update(lis3mdl_values);
+
+	  // Signal, dass gefilterte Daten bereit sind
+	  osThreadFlagsSet(DataTransmitTasHandle, FILTERED_DATA_READY_FLAG);
   }
-  /* USER CODE END Data_Filter_Task */
 }
 
 /**
