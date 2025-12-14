@@ -1,9 +1,9 @@
 #include "filter.h"
 #include <string.h>
 
-/* GLOBALE FILTERWERTE, nur Deklaration */
-LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values;
-LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values;
+/* GLOBALE GEFILTERTE WERTE (ECHTE DEFINITION) */
+LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values = {0};
+LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values = {0};
 
 /* ============================================================
  * 5th Order Butterworth (SOS) Filter – coefficients from MATLAB
@@ -77,7 +77,8 @@ LSM6DSL_FILTERED_VALUES LSM6DSL_Filter_Update(LSM6DSL_VALUES current)
     lsm6dsl_filtered_values.gyro_y = Filter_Process(current.gyro_y);
     lsm6dsl_filtered_values.gyro_z = Filter_Process(current.gyro_z);
 
-    lsm6dsl_filtered_values.temperature = Filter_Process(current.temperature);
+    /* Temperatur NICHT filtern */
+    lsm6dsl_filtered_values.temperature = current.temperature;
 
     return lsm6dsl_filtered_values;
 }
@@ -96,6 +97,9 @@ LIS3MDL_FILTERED_VALUES LIS3MDL_Filter_Update(LIS3MDL_VALUES current)
     lis3mdl_filtered_values.x = Filter_Process(current.x);
     lis3mdl_filtered_values.y = Filter_Process(current.y);
     lis3mdl_filtered_values.z = Filter_Process(current.z);
+
+    /* Temperatur NICHT filtern */
+    lis3mdl_filtered_values.temperature = current.temperature;
 
     return lis3mdl_filtered_values;
 }

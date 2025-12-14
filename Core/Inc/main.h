@@ -114,15 +114,31 @@ void Error_Handler(void);
 
 typedef struct {
 	float	delimiter;
-	float	acc_x;
-	float	acc_y;
-	float	acc_z;
-	float	gyro_x;
-	float	gyro_y;
-	float	gyro_z;
-	float	mag_x;
-	float	mag_y;
-	float	mag_z;
+	// LSM6DSL Rohdaten
+	float acc_x;
+	float acc_y;
+	float acc_z;
+	float gyro_x;
+	float gyro_y;
+	float gyro_z;
+
+	// LSM6DSL gefilterte Werte
+	float acc_x_filtered;
+	float acc_y_filtered;
+	float acc_z_filtered;
+	float gyro_x_filtered;
+	float gyro_y_filtered;
+	float gyro_z_filtered;
+
+	// LIS3MDL Rohdaten
+	float mag_x;
+	float mag_y;
+	float mag_z;
+
+	// LIS3MDL gefilterte Werte
+	float mag_x_filtered;
+	float mag_y_filtered;
+	float mag_z_filtered;
 }__attribute__((packed)) TRANSMIT_DATA;
 /* USER CODE END Private defines */
 

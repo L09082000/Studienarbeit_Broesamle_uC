@@ -24,6 +24,21 @@ typedef struct {
     float temperature;
 } LIS3MDL_FILTERED_VALUES;
 
+/* --- Struktur für einen Biquad (2. Ordnung IIR-Filter) --- */
+typedef struct {
+    float b0;
+    float b1;
+    float b2;
+    float a1;
+    float a2;
+    float z1;
+    float z2;
+} Biquad;
+
+/* NUR Deklaration */
+extern LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values;
+extern LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values;
+
 /* --- LSM6DSL-Filterfunktionen --- */
 void LSM6DSL_Filter_Init(void);
 LSM6DSL_FILTERED_VALUES LSM6DSL_Filter_Update(LSM6DSL_VALUES current);
