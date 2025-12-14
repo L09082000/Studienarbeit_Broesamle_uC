@@ -549,8 +549,13 @@ void IMU_Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(IMU_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+
+	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
+
+	  // Prüfen, ob neue IMU-Daten vorliegen
 	  HAL_status = LSM6DSL_data_ready();
   }
   /* USER CODE END IMU_Task */
@@ -570,8 +575,13 @@ void Magneto_Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(MAG_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+
+	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
+
+	  // Prüfen, ob neue Magnetometer-Daten vorliegen
 	  HAL_status = LIS3MDL_data_ready();
   }
   /* USER CODE END Magneto_Task */
@@ -591,9 +601,14 @@ void ToF_Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(TOF_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+
+	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
-	  HAL_status = VL53L0X_data_ready();
+
+	  // Prüfen, ob neue Magnetometer-Daten vorliegen
+	  HAL_status = LIS3MDL_data_ready();
   }
   /* USER CODE END ToF_Task */
 }
@@ -612,8 +627,13 @@ void Baro_Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(BARO_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+
+	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
+
+	  // Prüfen, ob neue Magnetometer-Daten vorliegen
 	  HAL_status = LPS22HB_data_ready();
   }
   /* USER CODE END Baro_Task */
@@ -633,8 +653,12 @@ void Humidity_Task(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(HUMIDITY_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+
+	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
+	  // Prüfen, ob neue Magnetometer-Daten vorliegen
 	  HAL_status = HTS221_data_ready();
   }
   /* USER CODE END Humidity_Task */
