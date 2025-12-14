@@ -16,7 +16,7 @@ extern osSemaphoreId_t I2C2availableHandle;
 
 /* variables used within this file as global ones */
 static LSM6DSL_RAW_VALUES lsm6dsl_raw_values;
-static LSM6DSL_VALUES lsm6dsl_values;
+LSM6DSL_VALUES lsm6dsl_values;
 static LSM6DSL_CTRL1 lsm6dsl_ctrl = {
     .ctrl1.reg_value = 0x54,  /* CTRL1_XL: ODR 104 Hz, FS ±16g */
     .ctrl2.reg_value = 0x5C,  /* CTRL2_G: ODR 104 Hz, FS ±2000°/s */
