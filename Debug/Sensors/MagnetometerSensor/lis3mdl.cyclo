@@ -1,0 +1,3 @@
+../Sensors/MagnetometerSensor/lis3mdl.c:43:19:LIS3MDL_initialize	8
+../Sensors/MagnetometerSensor/lis3mdl.c:93:19:LIS3MDL_data_ready	5
+../Sensors/MagnetometerSensor/lis3mdl.c:134:16:LIS3MDL_get_values	1

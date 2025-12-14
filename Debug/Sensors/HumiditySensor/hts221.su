@@ -1,0 +1,5 @@
+../Sensors/HumiditySensor/hts221.c:30:19:HTS221_initialize	24	static
+../Sensors/HumiditySensor/hts221.c:73:19:HTS221_Get_Calibration_Values	48	static
+../Sensors/HumiditySensor/hts221.c:113:7:HTS221_Get_Humidity	16	static
+../Sensors/HumiditySensor/hts221.c:136:7:HTS221_Get_Temperature	16	static
+../Sensors/HumiditySensor/hts221.c:148:19:HTS221_data_ready	24	static

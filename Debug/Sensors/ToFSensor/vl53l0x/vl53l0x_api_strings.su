@@ -1,0 +1,8 @@
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:32:1:VL53L0X_check_part_used	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:57:1:VL53L0X_get_device_info	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:99:15:VL53L0X_get_device_error_string	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:168:15:VL53L0X_get_range_status_string	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:200:15:VL53L0X_get_pal_error_string	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:271:15:VL53L0X_get_pal_state_string	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:306:1:VL53L0X_get_sequence_steps_info	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_api_strings.c:336:15:VL53L0X_get_limit_check_info	40	static

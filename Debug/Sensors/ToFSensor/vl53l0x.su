@@ -1,0 +1,3 @@
+../Sensors/ToFSensor/vl53l0x.c:24:15:vl53l0x_initialize	120	static
+../Sensors/ToFSensor/vl53l0x.c:67:15:SetupContinousIntMeasurement	32	static
+../Sensors/ToFSensor/vl53l0x.c:128:19:VL53L0X_data_ready	16	static

@@ -1,0 +1,2 @@
+../Sensors/AirPressureSensor/lps22hb.c:41:19:LPS22HB_initialize	24	static
+../Sensors/AirPressureSensor/lps22hb.c:92:19:LPS22HB_data_ready	32	static

@@ -1,0 +1,3 @@
+../Sensors/AccelerationSensor/lsm6dsl.c:47:19:LSM6DSL_initialize	7
+../Sensors/AccelerationSensor/lsm6dsl.c:97:19:LSM6DSL_data_ready	3
+../Sensors/AccelerationSensor/lsm6dsl.c:133:16:LSM6DSL_get_values	1

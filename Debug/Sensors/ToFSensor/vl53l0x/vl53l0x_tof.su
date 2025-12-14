@@ -1,0 +1,13 @@
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:40:19:_I2CWrite	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:51:5:_I2CRead	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:62:15:VL53L0X_RdByte	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:85:15:VL53L0X_WriteMulti	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:107:15:VL53L0X_ReadMulti	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:128:15:VL53L0X_RdWord	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:151:15:VL53L0X_RdDWord	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:176:15:VL53L0X_WrByte	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:192:15:VL53L0X_WrWord	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:209:15:VL53L0X_UpdateByte	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:226:15:VL53L0X_WrDWord	32	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:243:15:VL53L0X_PollingDelay	24	static
+../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.c:255:6:SetupSingleShot	40	static
