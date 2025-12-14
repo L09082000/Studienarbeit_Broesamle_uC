@@ -143,7 +143,4 @@ HAL_StatusTypeDef VL53L0X_data_ready(void)
     {
     	return HAL_BUSY;
     }
-
-
 }
-

@@ -114,6 +114,13 @@ osThreadId_t DataTransmitTasHandle;
 const osThreadAttr_t DataTransmitTas_attributes = {
   .name = "DataTransmitTas",
   .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal6,
+};
+/* Definitions for DataFilterTask */
+osThreadId_t DataFilterTaskHandle;
+const osThreadAttr_t DataFilterTask_attributes = {
+  .name = "DataFilterTask",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal7,
 };
 /* Definitions for I2C2available */
@@ -149,6 +156,7 @@ void Baro_Task(void *argument);
 void Humidity_Task(void *argument);
 void Init_Task(void *argument);
 void Data_Transmit_Task(void *argument);
+void Data_Filter_Task(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -245,6 +253,9 @@ int main(void)
 
   /* creation of DataTransmitTas */
   DataTransmitTasHandle = osThreadNew(Data_Transmit_Task, NULL, &DataTransmitTas_attributes);
+
+  /* creation of DataFilterTask */
+  DataFilterTaskHandle = osThreadNew(Data_Filter_Task, NULL, &DataFilterTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* terminate the default Task because it just exists because of the STM23CubeIDE configuration set it mandatory - that is not needed because
@@ -717,6 +728,24 @@ void Data_Transmit_Task(void *argument)
 	  __HAL_DMA_DISABLE_IT(huart1.hdmatx, DMA_IT_HT );
   }
   /* USER CODE END Data_Transmit_Task */
+}
+
+/* USER CODE BEGIN Header_Data_Filter_Task */
+/**
+* @brief Function implementing the DataFilterTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Data_Filter_Task */
+void Data_Filter_Task(void *argument)
+{
+  /* USER CODE BEGIN Data_Filter_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Data_Filter_Task */
 }
 
 /**
