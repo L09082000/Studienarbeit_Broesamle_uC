@@ -32,6 +32,7 @@
 #include "../Sensors/HumiditySensor/hts221.h"
 #include "../Sensors/MagnetometerSensor/lis3mdl.h"
 #include "../Sensors/ToFSensor/vl53l0x.h"
+#include "../Filter/filter.h"
 
 /* USER CODE END Includes */
 
@@ -717,7 +718,7 @@ void Data_Transmit_Task(void *argument)
   for(;;)
   {
 	  /* wait until both sensors provide new data */
-	  osThreadFlagsWait(IMU_SENSOR_THREAD_ACTIVATE_FLAG | MAG_SENSOR_THREAD_ACTIVATE_FLAG , osFlagsWaitAll, osWaitForever);
+	  osThreadFlagsWait(FILTERED_DATA_READY_FLAG, osFlagsWaitAny, osWaitForever);
 	  SEGGER_SYSVIEW_PrintfHost("DataTransmit");
 	  osSemaphoreAcquire(UART1availableHandle, osWaitForever);
 

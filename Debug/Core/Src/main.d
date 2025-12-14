@@ -56,7 +56,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53l0x_def.h \
  C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53l0x_device.h \
  C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53l0x_types.h \
- C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.h
+ C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.h \
+ C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/filter.h \
+ C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/../Sensors/AccelerationSensor/lsm6dsl.h \
+ C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/../Sensors/MagnetometerSensor/lis3mdl.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -116,3 +119,6 @@ C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53
 C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53l0x_device.h:
 C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/./vl53l0x/vl53l0x_types.h:
 C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Sensors/ToFSensor/vl53l0x/vl53l0x_tof.h:
+C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/filter.h:
+C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/../Sensors/AccelerationSensor/lsm6dsl.h:
+C:/Users/Lucas/git/Studienarbeit_V10/Sensors/../Filter/../Sensors/MagnetometerSensor/lis3mdl.h:

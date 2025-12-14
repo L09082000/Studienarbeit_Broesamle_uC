@@ -17,7 +17,7 @@ static Biquad biquads[3];
 /* ============================================================
  * Initialize all biquad filters (set delay states to zero)
  * ============================================================ */
-void Filter_Init(void)
+void LSM6DSL_Filter_Init(void)
 {
     memset(biquads, 0, sizeof(biquads));
 
@@ -63,7 +63,7 @@ float Filter_Process(float x)
 /* ============================================================
  * Apply the filter to all LSM6DSL sensor channels
  * ============================================================ */
-LSM6DSL_FILTERED_VALUES Filter_Update(LSM6DSL_VALUES current)
+LSM6DSL_FILTERED_VALUES LSM6DSL_Filter_Update(LSM6DSL_VALUES current)
 {
     LSM6DSL_FILTERED_VALUES filtered;
 

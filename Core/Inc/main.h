@@ -110,6 +110,7 @@ void Error_Handler(void);
 #define BARO_SENSOR_THREAD_ACTIVATE_FLAG			0x04
 #define HUMIDITY_SENSOR_THREAD_ACTIVATE_FLAG		0x08
 #define TOF_SENSOR_THREAD_ACTIVATE_FLAG				0x10
+#define FILTERED_DATA_READY_FLAG					0x20
 
 typedef struct {
 	float	delimiter;
