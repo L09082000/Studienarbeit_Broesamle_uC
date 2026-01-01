@@ -61,6 +61,10 @@ UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 
+#ifdef DEBUG
+volatile int debug_count_main = 0;  // <- sichtbar im Debugger, verändert sich im Code
+#endif
+
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -141,8 +145,6 @@ TRANSMIT_DATA transmit_data ={.delimiter = NAN};
 
 extern LSM6DSL_VALUES lsm6dsl_values;
 extern LIS3MDL_VALUES lis3mdl_values;
-extern LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values;
-extern LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -565,6 +567,8 @@ void IMU_Task(void *argument)
   {
 	  // Auf Aktivierungsflag warten
 	  osThreadFlagsWait(IMU_SENSOR_THREAD_ACTIVATE_FLAG, osFlagsWaitAll, osWaitForever);
+	  osThreadFlagsSet(DataFilterTaskHandle, RAW_IMU_DATA_READY_FLAG | 0x1);
+
 
 	  // I2C-Bus sichern
 	  osSemaphoreAcquire(I2C2availableHandle, osWaitForever);
@@ -572,6 +576,9 @@ void IMU_Task(void *argument)
 	  // Prüfen, ob neue IMU-Daten vorliegen
 	  HAL_status = LSM6DSL_data_ready();
 	  osSemaphoreRelease(I2C2availableHandle);
+
+	  // Flagge: neue Sensorwerte vorhanden
+	  osThreadFlagsSet(DataFilterTaskHandle, RAW_IMU_DATA_READY_FLAG);
   }
   /* USER CODE END IMU_Task */
 }
@@ -599,6 +606,9 @@ void Magneto_Task(void *argument)
 	  // Prüfen, ob neue Magnetometer-Daten vorliegen
 	  HAL_status = LIS3MDL_data_ready();
 	  osSemaphoreRelease(I2C2availableHandle);
+
+	  // Flagge: neue Sensorwerte vorhanden
+	  osThreadFlagsSet(DataFilterTaskHandle, RAW_MAG_DATA_READY_FLAG);
   }
   /* USER CODE END Magneto_Task */
 }
@@ -705,6 +715,10 @@ void Init_Task(void *argument)
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
+  /* Initialise Filter */
+  LSM6DSL_Filter_Init();
+  LIS3MDL_Filter_Init();
+
   /* initialisation finally done --> terminate this task */
   osThreadTerminate(InitTaskHandle);
 
@@ -769,14 +783,26 @@ void Data_Transmit_Task(void *argument)
 /* USER CODE END Header_Data_Filter_Task */
 void Data_Filter_Task(void *argument)
 {
-  for(;;)
+  for (;;)
   {
-	  // Filter auf die aktuellen Rohwerte anwenden
-	  lsm6dsl_filtered_values = LSM6DSL_Filter_Update(lsm6dsl_values);
-	  lis3mdl_filtered_values = LIS3MDL_Filter_Update(lis3mdl_values);
+	#ifdef DEBUG
+	debug_count_main++;
+	#endif
+    uint32_t flags = osThreadFlagsWait(RAW_IMU_DATA_READY_FLAG | RAW_MAG_DATA_READY_FLAG, osFlagsWaitAny, osWaitForever);
 
-	  // Signal, dass gefilterte Daten bereit sind
-	  osThreadFlagsSet(DataTransmitTasHandle, FILTERED_DATA_READY_FLAG);
+    if (flags & RAW_IMU_DATA_READY_FLAG)
+    {
+      // Filter nur aufrufen, globale Variable wird direkt aktualisiert
+      LSM6DSL_Filter_Update(lsm6dsl_values);
+    }
+
+    if (flags & RAW_MAG_DATA_READY_FLAG)
+    {
+      // Filter nur aufrufen, globale Variable wird direkt aktualisiert
+      LIS3MDL_Filter_Update(lis3mdl_values);
+    }
+
+    osThreadFlagsSet(DataTransmitTasHandle, FILTERED_DATA_READY_FLAG);
   }
 }
 

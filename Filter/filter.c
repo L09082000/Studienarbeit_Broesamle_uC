@@ -1,105 +1,140 @@
 #include "filter.h"
 #include <string.h>
 
-/* GLOBALE GEFILTERTE WERTE (ECHTE DEFINITION) */
+/* ============================================================
+ * GLOBAL FILTERED VALUES (echte Definition!)
+ * ============================================================ */
 LSM6DSL_FILTERED_VALUES lsm6dsl_filtered_values = {0};
 LIS3MDL_FILTERED_VALUES lis3mdl_filtered_values = {0};
 
+#ifdef DEBUG
+volatile int debug_count = 0;  // <- sichtbar im Debugger, verändert sich im Code
+#endif
+
 /* ============================================================
- * 5th Order Butterworth (SOS) Filter – coefficients from MATLAB
+ * 5th Order Butterworth (SOS)
  * fs = 100 Hz, fc = 10 Hz
  * ============================================================ */
-static const float sos[3][6] = {
+static const float sos[3][6] =
+{
     {0.0013f, 0.0013f, 0.0000f, 1.0000f, -0.5095f,  0.0000f},
     {1.0000f, 2.0016f, 1.0016f, 1.0000f, -1.0966f,  0.3554f},
     {1.0000f, 1.9994f, 0.9994f, 1.0000f, -1.3693f,  0.6926f}
 };
 
-/* 3 SOS sections → 3 biquads */
-static Biquad biquads[3];
-
 /* ============================================================
- * Initialize all biquad filters (set delay states to zero)
+ * BIQUAD CHAINS – JEDER KANAL EIGEN!
  * ============================================================ */
-void LSM6DSL_Filter_Init(void)
-{
-    memset(biquads, 0, sizeof(biquads));
+static Biquad acc_x_biquads[3];
+static Biquad acc_y_biquads[3];
+static Biquad acc_z_biquads[3];
 
-    for (int i = 0; i < 3; i++)
-    {
-        biquads[i].b0 = sos[i][0];
-        biquads[i].b1 = sos[i][1];
-        biquads[i].b2 = sos[i][2];
-        biquads[i].a1 = sos[i][4];
-        biquads[i].a2 = sos[i][5];
-    }
-}
+static Biquad gyro_x_biquads[3];
+static Biquad gyro_y_biquads[3];
+static Biquad gyro_z_biquads[3];
+
+static Biquad mag_x_biquads[3];
+static Biquad mag_y_biquads[3];
+static Biquad mag_z_biquads[3];
 
 /* ============================================================
- * Single sample processing through one biquad (DF2 transposed)
+ * Single biquad (DF2 Transposed)
  * ============================================================ */
 static inline float Biquad_Process(Biquad *bq, float x)
 {
     float w = x - bq->a1 * bq->z1 - bq->a2 * bq->z2;
     float y = bq->b0 * w + bq->b1 * bq->z1 + bq->b2 * bq->z2;
 
-    bq->z2 = bq->z1;    // update delay states
+    bq->z2 = bq->z1;
     bq->z1 = w;
 
     return y;
 }
 
 /* ============================================================
- * Process one value through all 3 SOS sections
+ * Process through 3 SOS sections
  * ============================================================ */
-float Filter_Process(float x)
+static inline float Filter_Process(Biquad *chain, float x)
 {
     float y = x;
-
     for (int i = 0; i < 3; i++)
     {
-        y = Biquad_Process(&biquads[i], y);
+        y = Biquad_Process(&chain[i], y);
     }
-
     return y;
 }
 
 /* ============================================================
- * Apply the filter to all LSM6DSL sensor channels
+ * Initialize one biquad chain
  * ============================================================ */
-LSM6DSL_FILTERED_VALUES LSM6DSL_Filter_Update(LSM6DSL_VALUES current)
+static void Init_Biquad_Chain(Biquad *chain)
 {
-    lsm6dsl_filtered_values.acc_x = Filter_Process(current.acc_x);
-    lsm6dsl_filtered_values.acc_y = Filter_Process(current.acc_y);
-    lsm6dsl_filtered_values.acc_z = Filter_Process(current.acc_z);
-
-    lsm6dsl_filtered_values.gyro_x = Filter_Process(current.gyro_x);
-    lsm6dsl_filtered_values.gyro_y = Filter_Process(current.gyro_y);
-    lsm6dsl_filtered_values.gyro_z = Filter_Process(current.gyro_z);
-
-    /* Temperatur NICHT filtern */
-    lsm6dsl_filtered_values.temperature = current.temperature;
-
-    return lsm6dsl_filtered_values;
+    memset(chain, 0, 3 * sizeof(Biquad));
+    for (int i = 0; i < 3; i++)
+    {
+        chain[i].b0 = sos[i][0];
+        chain[i].b1 = sos[i][1];
+        chain[i].b2 = sos[i][2];
+        chain[i].a1 = sos[i][4];
+        chain[i].a2 = sos[i][5];
+    }
 }
 
 /* ============================================================
- * LIS3MDL Filter
+ * LSM6DSL FILTER INIT
+ * ============================================================ */
+void LSM6DSL_Filter_Init(void)
+{
+#ifdef DEBUG
+debug_count++;
+#endif
+    Init_Biquad_Chain(acc_x_biquads);
+    Init_Biquad_Chain(acc_y_biquads);
+    Init_Biquad_Chain(acc_z_biquads);
+
+    Init_Biquad_Chain(gyro_x_biquads);
+    Init_Biquad_Chain(gyro_y_biquads);
+    Init_Biquad_Chain(gyro_z_biquads);
+}
+
+/* ============================================================
+ * LSM6DSL FILTER UPDATE
+ * ============================================================ */
+void LSM6DSL_Filter_Update(LSM6DSL_VALUES current)
+{
+	#ifdef DEBUG
+	debug_count++;
+	#endif
+	lsm6dsl_filtered_values.acc_x = Filter_Process(acc_x_biquads, current.acc_x);
+	lsm6dsl_filtered_values.acc_y = Filter_Process(acc_y_biquads, current.acc_y);
+	lsm6dsl_filtered_values.acc_z = Filter_Process(acc_z_biquads, current.acc_z);
+	lsm6dsl_filtered_values.gyro_x = Filter_Process(gyro_x_biquads, current.gyro_x);
+	lsm6dsl_filtered_values.gyro_y = Filter_Process(gyro_y_biquads, current.gyro_y);
+	lsm6dsl_filtered_values.gyro_z = Filter_Process(gyro_z_biquads, current.gyro_z);
+}
+
+/* ============================================================
+ * LIS3MDL FILTER INIT
  * ============================================================ */
 void LIS3MDL_Filter_Init(void)
 {
-    /* using same biquad chain → no extra states required */
-    /* if you want separate filters, I can split biquads[] */
+#ifdef DEBUG
+debug_count++;
+#endif
+    Init_Biquad_Chain(mag_x_biquads);
+    Init_Biquad_Chain(mag_y_biquads);
+    Init_Biquad_Chain(mag_z_biquads);
 }
 
-LIS3MDL_FILTERED_VALUES LIS3MDL_Filter_Update(LIS3MDL_VALUES current)
+/* ============================================================
+ * LIS3MDL FILTER UPDATE
+ * ============================================================ */
+void LIS3MDL_Filter_Update(LIS3MDL_VALUES current)
 {
-    lis3mdl_filtered_values.x = Filter_Process(current.x);
-    lis3mdl_filtered_values.y = Filter_Process(current.y);
-    lis3mdl_filtered_values.z = Filter_Process(current.z);
-
-    /* Temperatur NICHT filtern */
-    lis3mdl_filtered_values.temperature = current.temperature;
-
-    return lis3mdl_filtered_values;
+#ifdef DEBUG
+debug_count++;
+#endif
+    lis3mdl_filtered_values.x = Filter_Process(mag_x_biquads, current.x);
+    lis3mdl_filtered_values.y = Filter_Process(mag_y_biquads, current.y);
+    lis3mdl_filtered_values.z = Filter_Process(mag_z_biquads, current.z);
 }

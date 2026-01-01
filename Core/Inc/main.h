@@ -105,12 +105,19 @@ void Error_Handler(void);
       __typeof__ (b) _b = (b); \
     _a < _b ? _a : _b; })
 
-#define IMU_SENSOR_THREAD_ACTIVATE_FLAG				0x01
-#define MAG_SENSOR_THREAD_ACTIVATE_FLAG				0x02
-#define BARO_SENSOR_THREAD_ACTIVATE_FLAG			0x04
-#define HUMIDITY_SENSOR_THREAD_ACTIVATE_FLAG		0x08
-#define TOF_SENSOR_THREAD_ACTIVATE_FLAG				0x10
-#define FILTERED_DATA_READY_FLAG					0x20
+/* ========== Sensor-Interrupt → Sensor-Tasks ========== */
+#define IMU_SENSOR_THREAD_ACTIVATE_FLAG      (1U << 0)   // 0x0001
+#define MAG_SENSOR_THREAD_ACTIVATE_FLAG      (1U << 1)   // 0x0002
+#define BARO_SENSOR_THREAD_ACTIVATE_FLAG     (1U << 2)   // 0x0004
+#define HUMIDITY_SENSOR_THREAD_ACTIVATE_FLAG (1U << 3)   // 0x0008
+#define TOF_SENSOR_THREAD_ACTIVATE_FLAG      (1U << 4)   // 0x0010
+
+/* ========== Sensor-Tasks → Filter-Task ========== */
+#define RAW_IMU_DATA_READY_FLAG              (1U << 8)   // 0x0100
+#define RAW_MAG_DATA_READY_FLAG              (1U << 9)   // 0x0200
+
+/* ========== Filter-Task → Transmit-Task ========== */
+#define FILTERED_DATA_READY_FLAG             (1U << 16)  // 0x10000
 
 typedef struct {
 	float	delimiter;
